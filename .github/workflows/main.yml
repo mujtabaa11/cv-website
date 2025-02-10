@@ -7,7 +7,7 @@ on:
     paths:
       - 'template.yaml'
       - '**/*.py'
-      - 'main.yml'
+      - '**/**/*.yml'
 
 jobs:
   test:
@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_SAM_STACK_NAME: cv-website
+      AWS_REGION: us-east-1
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
