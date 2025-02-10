@@ -13,8 +13,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      AWS_SAM_STACK_NAME: cv-website
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -62,7 +60,7 @@ jobs:
         run: |
           sam deploy \
             --template-file packaged.yaml \
-            --stack-name ${{ env.AWS_SAM_STACK_NAME }} \
+            --stack-name cv-website \
             --capabilities CAPABILITY_IAM \
             --region us-east-1 \
             --confirm-changeset \
