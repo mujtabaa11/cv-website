@@ -48,14 +48,11 @@ jobs:
         run: |
           pip install aws-sam-cli
 
-      - name: Configure AWS Credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::307946668157:role/cv-website-Backend-GithubRepoAccessRole
-          aws-region: us-east-1  # or your preferred region
-
-      - name: Debug AWS Credentials
-        run: aws sts get-caller-identity
+      - name: Configure AWS Credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region us-east-1
 
       - name: Package SAM Application
         run: |
