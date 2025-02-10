@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: CV Website Application
+
+Resources:
+  VisitorCounterTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cvWebsiteCounter
+      AttributeDefinitions:
+        - AttributeName: GlobalCount
+          AttributeType: S
+      KeySchema:
+        - AttributeName: GlobalCount
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  CvWebsiteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: cv-website-function/ # Or ./cv_website_function if that's your directory name
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+              Resource: !GetAtt VisitorCounterTable.Arn
+      Events:
+        HttpApi:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /counter
+            Method: post
+
+  VisitorCounterApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowMethods: 
+          - POST
+          - OPTIONS
+        AllowHeaders: 
+          - Content-Type
+          - X-Amz-Date
+          - Authorization
+          - X-Api-Key
+          - X-Requested-With
+        AllowOrigins:
+          - "*"
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${VisitorCounterApi}.execute-api.${AWS::Region}.amazonaws.com/prod/counter"
+  CvWebsiteFunctionArn:
+    Description: "cvWebsite Lambda Function ARN"
+    Value: !GetAtt CvWebsiteFunction.Arn
+  VisitorCounterTableArn:
+    Description: "cvWebsiteCounter Table ARN"
+    Value: !GetAtt VisitorCounterTable.Arn
