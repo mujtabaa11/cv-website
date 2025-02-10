@@ -58,7 +58,7 @@ jobs:
         run: |
           sam package \
             --template-file template.yaml \
-            --s3-bucket arn:aws:s3:::aws-sam-cli-managed-default-samclisourcebucket-xeg5zlia8u4b \
+            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-xeg5zlia8u4b \
             --output-template-file packaged.yaml
 
       - name: Deploy SAM Application
