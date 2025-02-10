@@ -67,5 +67,5 @@ def lambda_handler(event, context):
 
             return {
                 'statusCode': 500,
-                'body': json.dumps({'error': 'Error updating the count', 'details': error_message, 'traceback': error_traceback}, cls=DecimalEncoder)  # Use custom encoder
+                'body': json.dumps({'error': 'Error updating count', 'details': error_message, 'traceback': error_traceback}, cls=DecimalEncoder)  # Use custom encoder
             }
