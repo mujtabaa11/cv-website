@@ -51,7 +51,7 @@ jobs:
       - name: Configure AWS Credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.IAM_ROLE_ASSUMED }}
+          role-to-assume: arn:aws:iam::307946668157:role/cv-website-Backend-GithubRepoAccessRole
           aws-region: us-east-1  # or your preferred region
 
       - name: Package SAM Application
