@@ -16,6 +16,7 @@ jobs:
     env:
       AWS_SAM_STACK_NAME: cv-website
       AWS_REGION: us-east-1
+      S3_BUCKET: aws-sam-cli-managed-default-samclisourcebucket-xeg5zlia8u4b
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -45,8 +46,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install AWS SAM CLI
-        run: |
-          pip install aws-sam-cli
+        run: pip install aws-sam-cli
 
       - name: Configure AWS Credentials
         run: |
@@ -54,18 +54,19 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region us-east-1
 
-      - name: Package SAM Application
+      - name: SAM Package
         run: |
           sam package \
             --template-file template.yaml \
-            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-xeg5zlia8u4b \
+            --s3-bucket ${{ env.S3_BUCKET }} \
             --output-template-file packaged.yaml
 
-      - name: Deploy SAM Application
+      - name: SAM Deploy
         run: |
           sam deploy \
             --template-file packaged.yaml \
-            --stack-name cv-website \
+            --stack-name ${{ env.AWS_SAM_STACK_NAME }} \
             --capabilities CAPABILITY_IAM \
-            --no-confirm-changeset \
+            --region ${{ env.AWS_REGION }} \
+            --confirm-changeset \
             --no-fail-on-empty-changeset
