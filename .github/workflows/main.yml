@@ -64,4 +64,3 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region us-east-1 \
             --no-confirm-changeset \  # <-- This prevents the prompt
-            --config-env default || [[ $? -eq 1 ]]
