@@ -54,6 +54,9 @@ jobs:
           role-to-assume: arn:aws:iam::307946668157:role/cv-website-Backend-GithubRepoAccessRole
           aws-region: us-east-1  # or your preferred region
 
+      - name: Debug AWS Credentials
+        run: aws sts get-caller-identity
+
       - name: Package SAM Application
         run: |
           sam package \
