@@ -1,0 +1,71 @@
+name: Test, Package, and Deploy SAM Application
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'template.yaml'
+      - '**/*.py'
+
+jobs:
+  test:
+    name: Run Python Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'  # Adjust the version if needed
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
+
+      - name: Run Tests
+        run: |
+          pytest
+
+  deploy:
+    name: Package and Deploy SAM Application using OIDC
+    needs: test  # Only deploy if tests pass
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install AWS SAM CLI
+        run: |
+          pip install aws-sam-cli
+
+      - name: Configure AWS Credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.IAM_ROLE_ASSUMED }}
+          aws-region: us-east-1  # or your preferred region
+
+      - name: Package SAM Application
+        run: |
+          sam package \
+            --template-file template.yaml \
+            --s3-bucket ${{ secrets.S3_BUCKET }} \
+            --output-template-file packaged.yaml
+
+      - name: Deploy SAM Application
+        run: |
+          sam deploy \
+            --template-file packaged.yaml \
+            --stack-name my-sam-stack \
+            --capabilities CAPABILITY_IAM \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset
