@@ -58,14 +58,14 @@ jobs:
         run: |
           sam package \
             --template-file template.yaml \
-            --s3-bucket ${{ secrets.S3_BUCKET }} \
+            --s3-bucket arn:aws:s3:::aws-sam-cli-managed-default-samclisourcebucket-xeg5zlia8u4b \
             --output-template-file packaged.yaml
 
       - name: Deploy SAM Application
         run: |
           sam deploy \
             --template-file packaged.yaml \
-            --stack-name my-sam-stack \
+            --stack-name cv-website \
             --capabilities CAPABILITY_IAM \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset
