@@ -7,6 +7,7 @@ on:
     paths:
       - 'template.yaml'
       - '**/*.py'
+      - 'main.yml'
 
 jobs:
   test:
