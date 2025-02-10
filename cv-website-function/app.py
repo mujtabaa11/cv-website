@@ -62,7 +62,7 @@ def lambda_handler(event, context):
             error_message = str(e)
             error_traceback = traceback.format_exc()
 
-            print(f"Error updating count: {error_message}")
+            print(f"Error while updating count: {error_message}")
             print(f"Error traceback: {error_traceback}")
 
             return {
