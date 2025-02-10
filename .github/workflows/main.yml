@@ -63,5 +63,6 @@ jobs:
             --stack-name cv-website \
             --capabilities CAPABILITY_IAM \
             --region us-east-1 \
-          --no-confirm-changeset \  # <-- This prevents the prompt
-          --no-fail-on-empty-changeset
+            --no-confirm-changeset \  # <-- This prevents the prompt
+            --resolve-s3 \
+            --config-env default
