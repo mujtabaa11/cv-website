@@ -65,4 +65,4 @@ jobs:
             --region us-east-1 \
             --no-confirm-changeset \  # <-- This prevents the prompt
             --resolve-s3 \
-            --config-env default || true
+            --config-env default || [[ $? -eq 1 ]]
