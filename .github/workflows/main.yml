@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_SAM_STACK_NAME: cv-website
-      AWS_REGION: us-east-1
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -65,6 +64,6 @@ jobs:
             --template-file packaged.yaml \
             --stack-name ${{ env.AWS_SAM_STACK_NAME }} \
             --capabilities CAPABILITY_IAM \
-            --region ${{ env.AWS_REGION }} \
+            --region us-east-1 \
             --confirm-changeset \
             --no-fail-on-empty-changeset
